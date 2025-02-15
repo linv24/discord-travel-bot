@@ -2,8 +2,9 @@
   "name": "discord-travel-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/discord/index.ts",
   "scripts": {
+    "start": "npx tsx .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/linv24/discord-travel-bot#readme",
   "dependencies": {
     "discord.js": "^14.17.3",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "tsx": "^4.19.2"
   }
 }
