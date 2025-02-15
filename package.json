@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/linv24/discord-travel-bot#readme",
   "dependencies": {
-    "discord.js": "^14.17.3"
+    "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7"
   }
 }
