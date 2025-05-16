@@ -2,6 +2,8 @@
 
 ## Features
 
+* `upload`: Upload a screenshot of flight itinerary for processing
+
 ## Development
 
 ### Installation/Running
