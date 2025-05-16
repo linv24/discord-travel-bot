@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits, Message, MessageFlags } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config()
@@ -19,7 +19,7 @@ for (const folder of commandFolders) {
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".ts"));
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
-        const command = (await import(filePath)).default;
+        const command = (await import(pathToFileURL(filePath).href)).default;
         // Set a new item in the Collection with the key as the command name and the value as the exported module
         if ("data" in command && "execute" in command) {
             client.commands.set(command.data.name, command);
@@ -34,7 +34,7 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(".ts"
 
 for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
-    const event = (await import(filePath)).default;
+    const event = (await import(pathToFileURL(filePath).href)).default;
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     } else {

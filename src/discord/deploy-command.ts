@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from 'node:url';
+import { pathToFileURL } from "url";
 dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +23,7 @@ for (const folder of commandFolders) {
     // grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
-        const command = (await import(filePath)).default;
+        const command = (await import(pathToFileURL(filePath).href)).default;
         if ("data" in command && "execute" in command) {
             commands.push(command.data.toJSON());
         } else {
