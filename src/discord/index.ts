@@ -1,7 +1,9 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config'; 
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] }); 
+
+client.commands = new Collection();
 
 // When the lcient is ready, run this code (only once)
 client.once(Events.ClientReady, readyClient => {
