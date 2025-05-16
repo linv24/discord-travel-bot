@@ -3,7 +3,8 @@ import path from "node:path";
 import { ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits, Message, MessageFlags } from "discord.js";
 import "../types/discord";
 import { Command } from "../types/Command";
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config()
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
