@@ -8,8 +8,8 @@
 
 1. `npm i`
 1. Create a `.env` file (as a copy of `.env.example`) in the root directory and ensure that it has the following variables:
-    * `APP_ID`: Discord app application ID
-    * `PUBLIC_KEY`: Discord app public key
+    * `DISCORD_APP_ID`: Discord app application ID
+    * `DISCORD_PUBLIC_KEY`: Discord app public key
     * `DISCORD_TOKEN`: Discord bot token
 
 To run the app: `npm run start`

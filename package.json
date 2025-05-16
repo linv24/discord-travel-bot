@@ -1,6 +1,7 @@
 {
   "name": "discord-travel-bot",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "src/discord/index.ts",
   "scripts": {
