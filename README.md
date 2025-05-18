@@ -2,6 +2,8 @@
 
 ## Features
 
+<img src="assets/system_flow_chart.jpg">
+
 ## Development
 
 ### Installation/Running
