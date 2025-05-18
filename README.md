@@ -4,7 +4,59 @@
 
 * `upload`: Upload a screenshot of flight itinerary for processing
 
+OCR should extract the following fields:
+* general:
+  * airline 
+  * confirmation number 
+  * number passengers? 
+* departure:
+  * flight date
+  * flight time
+  * flight number 
+  * location/airport 
+  * duration + layover information (maybe needs to be calculated instead?)
+* arrival:
+  * same as departure
+
+Tested airlines:
+
+
 ## Development
+
+parsed OCR json format:
+```
+{
+  "confirmation": string,
+  "num_passengers": number,
+  "flights": [
+    {
+      "flight_number": string,
+      "airline": string,
+      "aircraft": string,
+      "depart": {
+        "airport": string,
+        "city": string,
+        "datetime": string (ISO 8601),
+        "terminal": string,
+        "gate": string
+      },
+      "arrive": {
+        "airport": string,
+        "city": string,
+        "datetime": string (ISO 8601),
+        "terminal": string,
+        "gate": string
+      }
+    }
+  ],
+  "layovers": [
+    {
+      "airport": string,
+      "duration": string
+    }
+  ]
+}
+```
 
 ### Installation/Running
 
