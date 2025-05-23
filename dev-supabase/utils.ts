@@ -1,17 +1,18 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Gets a user's ID from the database by Discord ID, or creates a new user if not found.
  * @param supabase The Supabase client instance.
- * @param discord_id The Discord Snowflake ID to look up.
+ * @param discordId The Discord Snowflake ID to look up.
  * @returns The user's ID from the databaes.
  * @throws If there is an error in inserting a new user.
  */
-export async function getUserId(supabase: SupabaseClient, discord_id: string) {
+export async function getUserId(supabase: SupabaseClient, discordId: string) {
     const { data: user, error: userError} = await supabase
         .from("users")
         .select("id")
-        .eq("discord_id", discord_id)
+        .eq("discord_id", discordId)
         .single()
 
     let userId: string
@@ -19,7 +20,7 @@ export async function getUserId(supabase: SupabaseClient, discord_id: string) {
     if (userError || !user) {
         const { data: newUser, error: insertUserError } = await supabase
             .from("users")
-            .insert({ discord_id })
+            .insert({ discordId })
             .select()
             .single()
 
@@ -30,4 +31,47 @@ export async function getUserId(supabase: SupabaseClient, discord_id: string) {
     }
 
     return userId 
+}
+
+/**
+ * Adds reminders to the database by journey ID. Currently, only supports reminders
+ * at 2 hours before and 15 minutes before journey check-in, no custom reminders yet.
+ * @param supabase The Supabase client instance.
+ * @param journeyId The journey ID for which the reminders should be added.
+ * @throws If there is an error in adding reminders.
+ */
+export async function addReminders(supabase: SupabaseClient, journeyId: string) {
+    // Get the earliest leg in the journey 
+    const { data: departureTimestamps, error: departureTimestampsError } = await supabase
+        .from("legs")
+        .select("departure_timestamp")
+        .eq("journey_id", journeyId)
+    if (departureTimestampsError || !departureTimestamps) throw departureTimestampsError;
+    const depatureTimestampsArray = departureTimestamps.map((legTimestamp) => legTimestamp.departure_timestamp);
+    depatureTimestampsArray
+        .sort((a, b) => 
+            new Date(a).getTime() - new Date(b).getTime()
+        );
+    const earliestTimestamp = depatureTimestampsArray[0]
+
+    // Create reminders based on earliest timestamp in journey
+    const reminders = []; 
+    const minutesBeforeArray = [15, 120]
+    for (const minutesBefore of minutesBeforeArray) {
+        const date = new Date(earliestTimestamp)
+        date.setMinutes(date.getMinutes() - minutesBefore)
+        const reminderTimestamp = date.toISOString()
+        const reminderId = uuidv4()
+        reminders.push({
+            id: reminderId,
+            journey_id: journeyId,
+            notify_at: reminderTimestamp,
+        })
+    }
+
+    // Insert reminders into database
+    const { error: remindersError } = await supabase
+        .from("reminders")
+        .insert(reminders)
+    if (remindersError) throw remindersError;
 }
