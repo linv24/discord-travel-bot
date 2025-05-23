@@ -13,7 +13,7 @@ dotenv.config({ path: resolve(__dirname, "../.env") });
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_KEY
 
-// TODO: some fields can be null, enforce this in interface
+
 interface TripJSON {
   name: string
   description: string
@@ -24,8 +24,8 @@ interface TripJSON {
     departure_timestamp: string
     arrival_timestamp: string
     legs: {
-      flight_number: string | null
-      airline: string | null 
+      flight_number?: string
+      airline?: string 
       departure_airport_code: string
       arrival_airport_code: string
       departure_timestamp: string
@@ -34,18 +34,15 @@ interface TripJSON {
   }[]
 }
 
-async function main(discord_id: string, trip: TripJSON) {
-    // console.log(JSON.stringify(trip_data, null, 2))
-
+async function insertTrip(discord_id: string, trip: TripJSON) {
     if (!supabaseUrl || !supabaseKey) {
-    throw new Error("Missing Supabase config in environment variables.")
+        throw new Error("Missing Supabase config in environment variables.")
     }
-
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const userId = await utils.getUserId(supabase, discord_id)
 
-    // insert trip
+    // Insert trip
     const tripId = uuidv4()
     const {error: tripError } = await supabase
         .from("trips")
@@ -59,7 +56,7 @@ async function main(discord_id: string, trip: TripJSON) {
         })
     if (tripError) throw tripError;
 
-    // insert journey
+    // Insert journey
     for (const journey of trip.journeys) {
         const journeyId = uuidv4()
         const { error: journeyError } = await supabase
@@ -73,7 +70,7 @@ async function main(discord_id: string, trip: TripJSON) {
             })
         if (journeyError) throw journeyError;
 
-        // insert legs
+        // Insert legs
         const legs = journey.legs.map((leg) => ({
             id: uuidv4(),
             journey_id: journeyId,
@@ -88,6 +85,9 @@ async function main(discord_id: string, trip: TripJSON) {
             .from("legs")
             .insert(legs)
         if (legsError) throw legsError;
+
+        // Insert journey reminders
+        utils.addReminders(supabase, journeyId);
     }
 
     return { success: true, tripId };
@@ -95,4 +95,4 @@ async function main(discord_id: string, trip: TripJSON) {
 
 const discord_id = "238837641473163264"
 import trip_data from "./sample_data.json";
-await main(discord_id, trip_data)
+await insertTrip(discord_id, trip_data)
