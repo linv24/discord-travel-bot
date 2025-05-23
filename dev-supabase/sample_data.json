@@ -1,6 +1,6 @@
 {
   "name": "Europe 2025",
-  "notes": "Pack light!",
+  "description": "Pack light!",
   "start_timestamp": "2025-06-01T00:00:00Z",
   "end_timestamp": "2025-06-15T00:00:00Z",
   "journeys": [
@@ -12,16 +12,16 @@
         {
           "flight_number": "AF123",
           "airline": "Air France",
-          "departure_airport": "JFK",
-          "arrival_airport": "CDG",
+          "departure_airport_code": "JFK",
+          "arrival_airport_code": "CDG",
           "departure_timestamp": "2025-06-01T09:00:00Z",
           "arrival_timestamp": "2025-06-01T21:00:00Z"
         },
         {
           "flight_number": "AF456",
           "airline": "Air France",
-          "departure_airport": "CDG",
-          "arrival_airport": "FCO",
+          "departure_airport_code": "CDG",
+          "arrival_airport_code": "FCO",
           "departure_timestamp": "2025-06-01T22:00:00Z",
           "arrival_timestamp": "2025-06-01T23:00:00Z"
         }
