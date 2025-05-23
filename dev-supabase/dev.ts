@@ -24,8 +24,8 @@ interface TripJSON {
     departure_timestamp: string
     arrival_timestamp: string
     legs: {
-      flight_number: string
-      airline: string
+      flight_number: string | null
+      airline: string | null 
       departure_airport_code: string
       arrival_airport_code: string
       departure_timestamp: string
