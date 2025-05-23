@@ -35,7 +35,7 @@ export async function getUserId(supabase: SupabaseClient, discordId: string) {
 
 /**
  * Adds reminders to the database by journey ID. Currently, only supports reminders
- * at 2 hours before and 15 minutes before journey check-in, no custom reminders yet.
+ * at 2 hours before and 10 minutes before journey check-in, no custom reminders yet.
  * @param supabase The Supabase client instance.
  * @param journeyId The journey ID for which the reminders should be added.
  * @throws If there is an error in adding reminders.
@@ -56,7 +56,7 @@ export async function addReminders(supabase: SupabaseClient, journeyId: string) 
 
     // Create reminders based on earliest timestamp in journey
     const reminders = []; 
-    const minutesBeforeArray = [15, 120]
+    const minutesBeforeArray = [10, 120] // TODO: eventually remove hardcoded reminder times
     for (const minutesBefore of minutesBeforeArray) {
         const date = new Date(earliestTimestamp)
         date.setMinutes(date.getMinutes() - minutesBefore)
