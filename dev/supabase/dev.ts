@@ -1,4 +1,4 @@
-import { insertTrip } from "../src/db/trips.js";
+import { insertTrip } from "../../src/db/trips.js";
 import trip_data from "./sample_data.json" assert { type: "json" };
 
 const discord_id = "238837641473163264";
