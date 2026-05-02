@@ -11,25 +11,25 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: resolve(__dirname, "../.env") });
 
 const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_KEY
+const supabaseKey = process.env.SUPABASE_SECRET_KEY
 
 
 interface TripJSON {
   name: string
   description: string
-  start_timestamp: string
-  end_timestamp: string
+  start_date: string
+  end_date: string
   journeys: {
     confirmation: string
-    departure_timestamp: string
-    arrival_timestamp: string
+    departure_datetime: string
+    arrival_datetime: string
     legs: {
       flight_number?: string
-      airline?: string 
+      airline?: string
       departure_airport_code: string
       arrival_airport_code: string
-      departure_timestamp: string
-      arrival_timestamp: string
+      departure_datetime: string
+      arrival_datetime: string
     }[]
   }[]
 }
@@ -51,8 +51,8 @@ async function insertTrip(discord_id: string, trip: TripJSON) {
             user_id: userId,
             name: trip.name,
             description: trip.description,
-            start_timestamp: trip.start_timestamp,
-            end_timestamp: trip.end_timestamp,
+            start_date: trip.start_date,
+            end_date: trip.end_date,
         })
     if (tripError) throw tripError;
 
@@ -65,8 +65,8 @@ async function insertTrip(discord_id: string, trip: TripJSON) {
                 id: journeyId,
                 trip_id: tripId,
                 confirmation: journey.confirmation,
-                departure_timestamp: journey.departure_timestamp,
-                arrival_timestamp: journey.arrival_timestamp,
+                departure_datetime: journey.departure_datetime,
+                arrival_datetime: journey.arrival_datetime,
             })
         if (journeyError) throw journeyError;
 
@@ -77,9 +77,9 @@ async function insertTrip(discord_id: string, trip: TripJSON) {
             flight_number: leg.flight_number,
             airline: leg.airline,
             departure_airport_code: leg.departure_airport_code,
-            departure_timestamp: leg.departure_timestamp,
+            departure_datetime: leg.departure_datetime,
             arrival_airport_code: leg.arrival_airport_code,
-            arrival_timestamp: leg.arrival_timestamp,
+            arrival_datetime: leg.arrival_datetime,
         }));
         const { error: legsError } = await supabase
             .from("legs")
@@ -87,7 +87,7 @@ async function insertTrip(discord_id: string, trip: TripJSON) {
         if (legsError) throw legsError;
 
         // Insert journey reminders
-        utils.addReminders(supabase, journeyId);
+        await utils.addReminders(supabase, journeyId);
     }
 
     return { success: true, tripId };

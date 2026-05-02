@@ -185,6 +185,7 @@ All timestamps use `timestamptz`. All times are stored in UTC; `airports.timezon
 | iata | text (PK) | uppercase |
 | name | text | |
 | city | text | |
+| state | text (nullable) | state or province; null for most international airports |
 | country | text | |
 | timezone | text | IANA tz string |
 
@@ -288,7 +289,7 @@ The parser returns a plain JSON object with no DB-generated fields (no UUIDs, no
 | `DISCORD_TOKEN` | Bot token from the Discord Developer Portal |
 | `DISCORD_CLIENT_ID` | Application ID, used for slash command registration |
 | `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (bypasses RLS for server-side writes) |
+| `SUPABASE_SECRET_KEY` | Supabase secret key (bypasses RLS for server-side writes) |
 | `ANTHROPIC_API_KEY` | Claude API key |
 | `REPEAT_INTERVAL_MINUTES` | How often a fired reminder re-pings (default: `15`) |
 | `POLL_INTERVAL_MS` | Reminder poller tick rate in milliseconds (default: `60000`) |
